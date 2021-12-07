@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udp-echo-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: udp-echo-server
+  template:
+    metadata:
+      labels:
+        app: udp-echo-server
+    spec:
+      containers:
+      - name: server
+        image: shaunybear/udp-echo-server
+        ports:
+        - containerPort: 1700
+          protocol: UDP
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: udp-echo-service
+spec:
+  externalTrafficPolicy: Local
+  type: NodePort
+  selector:
+    app: udp-echo-server
+  ports:
+  - name: udp
+    protocol: UDP
+    port: 1700
+    targetPort: 1700
+    nodePort: 31700

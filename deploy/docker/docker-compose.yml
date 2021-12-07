@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  server:
+    image: shaunybear/udp-echo-server
+    ports:
+    - target: 33333
+      published: 33333
+      protocol: udp
+    deploy:
+      replicas: 2
